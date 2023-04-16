@@ -41,8 +41,19 @@ public class SchoolService implements SchoolServiceInt{
 
 	@Override
 	public School UpdateSchool(School school) {
-		// TODO Auto-generated method stub
-		return schoolRepository.save(school);
+		// check if the school exists in the database
+        	School existingSchool = schoolRepository.findById(updatedSchool.getId())
+            	.orElseThrow(() -> new EntityNotFoundException("School not found with ID " + updatedSchool.getId()));
+        
+		// update the existing school entity with the values from the updated school object
+		existingSchool.setSchool_Name(updatedSchool.getSchool_Name());
+		existingSchool.setAddress(updatedSchool.getAddress());
+		existingSchool.setClass_Number(updatedSchool.getClass_Number());
+
+		// save the updated school entity to the database
+		School savedSchool = schoolRepository.save(existingSchool);
+
+		return savedSchool;
 	}
 
 }
